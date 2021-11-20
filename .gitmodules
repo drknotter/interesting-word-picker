@@ -1,0 +1,3 @@
+[submodule "WebstersEnglishDictionary"]
+	path = WebstersEnglishDictionary
+	url = https://github.com/matthewreagan/WebstersEnglishDictionary.git
