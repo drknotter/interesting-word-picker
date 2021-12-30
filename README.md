@@ -8,4 +8,4 @@ The `interesting-word-picker.py` script performs the random picking of words, an
 
 The `generate_interesting_site.py` script takes a file with a list of words, and generates a basic calendar HTML page for displaying the words, based on a start date.
 
-An example list of 365 interesting words were generated, and are displayed in `index.html`. You can see the results at this project's [Github page](drknotter.github.io/one-square-inch).
+An example list of 365 interesting words were generated, and are displayed in `index.html`. You can see the results at this project's [Github page](https://drknotter.github.io/one-square-inch).
