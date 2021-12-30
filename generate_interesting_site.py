@@ -94,7 +94,7 @@ def main(args):
     if m != current_month:
       current_month = m
       day_divs = []
-      for j in range(d.weekday()):
+      for j in range(d.weekday() + 1):
         day_divs.append(generate_day_div(d, ''))
       while True:
         day_divs.append(generate_day_div(d, interesting_words[i]))
@@ -104,7 +104,7 @@ def main(args):
         m = d.strftime('%B')
         if m != current_month or i >= len(interesting_words):
           break
-      for j in range(d.weekday(), 7):
+      for j in range(d.weekday() + 1, 7):
         day_divs.append(generate_day_div(d, ''))
       divs.append(generate_month_div(current_month, day_divs))
     if i >= len(interesting_words):
