@@ -7,3 +7,5 @@ A project for picking and displaying interesting words, to be drawn in one squar
 The `interesting-word-picker.py` script performs the random picking of words, and presents them to the user one by one, with the option to "skip" the word. Chosen words are saved to a file specified by the user.
 
 The `generate_interesting_site.py` script takes a file with a list of words, and generates a basic calendar HTML page for displaying the words, based on a start date.
+
+An example list of 365 interesting words were generated, and are displayed in `index.html`. You can see the results at this project's [Github page](drknotter.github.io/one-square-inch).
