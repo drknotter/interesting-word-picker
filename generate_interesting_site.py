@@ -9,6 +9,9 @@ style = """
 html {
   font-family: Tahoma, Verdana, sans-serif;
 }
+body {
+  margin: 0;
+}
 .noscroll {
   overflow: hidden;
 }
