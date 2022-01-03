@@ -3,14 +3,58 @@
 import argparse
 from datetime import datetime
 from htmlBuilder.tags import *
-from htmlBuilder.attributes import Class, Onclick, Onmouseout, Type, Style as InlineStyle
+from htmlBuilder.attributes import Class, Id, Onclick, Onmouseout, Type, Style as InlineStyle
 
 style = """
-body {
-  max-width: 602px;
-  min-width: 301px;
-  margin: 0 auto !important;
+html {
   font-family: Tahoma, Verdana, sans-serif;
+}
+.noscroll {
+  overflow: hidden;
+}
+.calendar {
+  max-width: 602px;
+  min-width: 480px;
+  margin: 0 auto !important;
+}
+#word-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(255,255,255,0.5);
+  pointer-events: none;
+  font-size: 1.5rem;
+}
+.popup-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  max-width: 75%;
+  min-width: 65%;
+  padding: 32px;
+  background-color: gray;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+#date {
+  text-align: start;
+  flex-grow: 1;
+  padding: 16px 32px;
+  background-color: lightgray;
+}
+#word {
+  text-align: center;
+  padding-top: 16px;
+  font-size: 3rem;
+}
+.month-container {
+  margin: 0 16px;
 }
 .month-name {
   margin: 15px 0px;
@@ -41,25 +85,52 @@ body {
   position: absolute;
   font-size: 1.25rem;
 }
+.word {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
 .day-container > * {
   pointer-events: none;
 }
-.word {
-  position: absolute;
-  opacity: 0;
+@media screen and (max-device-width: 480px) {
+  .calendar {
+    min-width: unset;
+    max-width: unset;
+    margin: 0 auto !important;
+    font-family: Tahoma, Verdana, sans-serif;
+  }
+  #word-popup {
+    font-size: 3rem;
+  }
+  .month-name {
+    font-size: 3rem;
+  }
+  .day {
+    font-size: 2rem;
+  }
 }
 """
 
 script = """
 function dayClick(element) {
-  Array.prototype.forEach.call(document.getElementsByClassName('day'), function(dayElement) { dayElement.style.opacity = '1' })
-  Array.prototype.forEach.call(document.getElementsByClassName('word'), function(dayElement) { dayElement.style.opacity = '0' })
-  Array.prototype.forEach.call(element.getElementsByClassName('day'), function(dayElement) { dayElement.style.opacity = '0' })
-  Array.prototype.forEach.call(element.getElementsByClassName('word'), function(dayElement) { dayElement.style.opacity = '1' })
+  var month = element.closest('.month-container').getElementsByClassName('month-name')[0].innerHTML
+  var day = element.getElementsByClassName('day')[0].innerHTML
+  var word = element.getElementsByClassName('word')[0].innerHTML
+  document.getElementById('date').innerHTML = `${month} ${day}`
+  document.getElementById('word').innerHTML = `${word}`
+
+  document.getElementById('word-popup').style['display'] = 'block'
+  document.getElementById('word-popup').style['pointer-events'] = 'auto'
+  document.getElementsByTagName('html')[0].classList.add('noscroll')
+  document.getElementsByTagName('body')[0].classList.add('noscroll')
 }
-function dayMouseOut(element) {
-  Array.prototype.forEach.call(element.getElementsByClassName('day'), function(dayElement) { dayElement.style.opacity = '1' })
-  Array.prototype.forEach.call(element.getElementsByClassName('word'), function(dayElement) { dayElement.style.opacity = '0' })
+function wordClick() {
+  document.getElementById('word-popup').style['display'] = 'none'
+  document.getElementById('word-popup').style['pointer-events'] = 'none'
+  document.getElementsByTagName('html')[0].classList.remove('noscroll')
+  document.getElementsByTagName('body')[0].classList.remove('noscroll')
 }
 """
 
@@ -71,8 +142,8 @@ def generate_month_div(month_name, day_divs):
 def generate_day_div(date, word):
   if len(word) == 0:
     return Div([Class('day-container space')])
-  return Div([Class('day-container'), Onclick('dayClick(this)'), Onmouseout('dayMouseOut(this)')],
-    Div([Class('day')], '%s' % (date.day)), Div([Class('word')], word))
+  return Div([Class('day-container'), Onclick('dayClick(this)')],
+    [Div([Class('day')], '%s' % (date.day)), Div([Class('word')], word)])
 
 def main(args):
   interesting_words = []
@@ -112,17 +183,25 @@ def main(args):
 
   html = Html([],
     Head([],
-      Title([], "Word of the Day"),
+      Title([], "One Square Inch"),
       Style([], style),
       Script([Type('text/javascript')], script)
     ),
     Body([],
-      divs
-    )
+      [
+        Div([Class('calendar')], 
+          divs),
+        Div([Id('word-popup'), Onclick('wordClick()')],
+        [
+          Div([Class('popup-container')],
+          [
+            Div([Id('date')], ''),
+            Div([Id('word')], '')
+          ])
+        ])
+      ])
   )
-  # no closing tags are required
 
-  # call the render() method to return tag instances as html text
   print(html.render(pretty=True))
 
 if __name__ == '__main__':
