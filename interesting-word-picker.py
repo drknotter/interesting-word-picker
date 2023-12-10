@@ -24,6 +24,7 @@ def main(args):
     print("Read %d words from dictionary, removed %d." % (original_length, original_length - len(words_and_weights)))
     words_and_weights = sorted(words_and_weights, key=lambda i: i[1], reverse=True)
 
+  picked_count = 0
   with open(args.picked, 'a') as picked_file:
     while True:
       total_weight = sum(list(map(lambda item: item[1], words_and_weights)))
@@ -35,9 +36,10 @@ def main(args):
         i += 1
       word = words_and_weights[i][0]
       del words_and_weights[i]
-      print('Pick %s? (y/n/c)' % (word))
+      print('Pick %s? (y/n/c) (picked %d so far)' % (word, picked_count))
       choice = readchar.readchar()
       if choice == 'y':
+        picked_count += 1
         picked_file.write('%s\n' % (word))
       if choice == 'c':
         break
