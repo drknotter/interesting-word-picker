@@ -365,5 +365,6 @@
         <item>flame</item>
         <item>compass</item>
         <item>bulb</item>
+        <item>transition</item>
     </string-array>
 </resources>
